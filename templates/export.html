@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Select Items to Download</h2>
+        <p> Current Account: {{ settings['SOURCE_ACCESS_KEY'] }} </p> 
+        <p> Current Instance ID: {{ settings['SOURCE_INSTANCE_ID'] }} </p> 
+        <form action="/api/export" method="POST">
+            <label><input type="checkbox" id="flows"> Flows</label><br>
+            <label><input type="checkbox" id="modules"> Modules</label><br>
+            <label><input type="checkbox" id="lexBots"> Lex bots</label><br>
+            <label><input type="checkbox" id="queues"> Queues</label><br>
+            <label><input type="checkbox" id="hours"> Hours</label><br>
+            <label><input type="checkbox" id="prompts"> Prompts</label><br>
+            <label><input type="checkbox" id="lambdas"> Lambdas</label><br><br>
+            <button type="submit">Download</button>
+        </form>
+        <p id="status"></p>
+    </div>
+
+    <script>
+
+        function startDownload() {
+            const selectedItems = [];
+            if (document.getElementById('flows').checked) selectedItems.push('Flows');
+            if (document.getElementById('modules').checked) selectedItems.push('Modules');
+            if (document.getElementById('lexBots').checked) selectedItems.push('Lex bots');
+            if (document.getElementById('queues').checked) selectedItems.push('Queues');
+            if (document.getElementById('hours').checked) selectedItems.push('Hours');
+            if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
+            if (document.getElementById('lambdas').checked) selectedItems.push('Lambdas');
+
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.disabled = true;
+            downloadButton.textContent = 'Downloading...';
+
+            setTimeout(() => {
+                downloadButton.disabled = false;
+                downloadButton.textContent = 'Download';
+                document.getElementById('status').textContent = 'Selected items: ' + selectedItems.join(', ');
+            }, 2000); // Simulate download delay
+        }
+    </script>
+</body>
+</html>

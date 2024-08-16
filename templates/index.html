@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application</title>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .section input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .dropdown {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/index_response" method="POST">
+            <div class="section">
+                <h2>Source Account (required)</h2>
+                <label for="source_access_key">Access Key ID:</label>
+                <input type="text" id="source_access_key" name="source_access_key">
+                <label for="source_secret_key">Secret Access Key:</label>
+                <input type="text" id="source_secret_key" name="source_secret_key">
+                <label for="source_session_token">Session Token:</label>
+                <input type="text" id="source_session_token" name="source_session_token">
+                <label for="source_instance_id">Instance ID:</label>
+                <input type="text" id="source_instance_id" name="source_instance_id">
+                <label for="source_region">Region:</label>
+                <input type="text" id="source_region" name="source_region">
+            </div>
+            <div class="section">
+                <h2>Destination Account</h2>
+                <label for="dest_access_key">Access Key ID:</label>
+                <input type="text" id="dest_access_key" name="dest_access_key">
+                <label for="dest_secret_key">Secret Access Key:</label>
+                <input type="text" id="dest_secret_key" name="dest_secret_key">
+                <label for="dest_session_token">Session Token:</label>
+                <input type="text" id="dest_session_token" name="dest_session_token">
+                <label for="dest_instance_id">Instance ID:</label>
+                <input type="text" id="dest_instance_id" name="dest_instance_id">
+                <label for="dest_region">Region:</label>
+                <input type="text" id="dest_region" name="dest_region">
+            </div>
+            <div class="section">
+                <h3>What would you like to do?</h3>
+                <select id="dropdown" class="dropdown" name="action">
+                    <option value="">Select an option</option>
+                    <option value="export">Export items</option>
+                    <option value="diff">Diff environments</option>
+                    <option value="sync">Sync environments</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
