@@ -6,18 +6,10 @@ import app_settings as Settings
 import json
 import boto3
 import time
+import api.amazon as Amazon
 
 # Get the current directory where the Python script is located
-'''current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Move the downloads directory one level up
-parent_dir = os.path.dirname(current_dir)
-downloads_dir = os.path.join(parent_dir, "downloads")
-flows_dir = os.path.join(downloads_dir, "flows")
-
-# Create the "downloads" directory if it doesn't exist
-if not os.path.exists(downloads_dir):
-    os.makedirs(downloads_dir)'''
 
 def create_client():
     source_instance_id = Settings.settings['SOURCE_INSTANCE_ID']
@@ -31,19 +23,15 @@ def create_client():
     return source_client, source_instance_id
 
 def download_flows():
-    #if not os.path.exists(flows_dir):
-     #   os.makedirs(flows_dir)
     print('downloading flows')
     source_client, source_instance_id = create_client()
     try:
-        response = source_client.list_contact_flows(
-            InstanceId=source_instance_id,
-            ContactFlowTypes=[
+        ContactFlowTypes=[
                 'CONTACT_FLOW', 'CUSTOMER_QUEUE', 'CUSTOMER_HOLD', 'CUSTOMER_WHISPER', 
                 'AGENT_HOLD', 'AGENT_WHISPER', 'OUTBOUND_WHISPER', 'AGENT_TRANSFER', 'QUEUE_TRANSFER'
-            ],
-            MaxResults=1000
-        )
+            ]
+        response = Amazon.list_contact_flows(source_client, source_instance_id, ContactFlowTypes, '', '1000')
+
     except Exception as e:
         print(f'Exception occurred: {e}')
         return None
@@ -66,5 +54,19 @@ def save_flows(source_client, source_instance_id, response):
             except Exception as e:
                 print("Exception: ", e)
 
-if __name__ == "__main__":
+def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    downloads_dir = os.path.join(current_dir, "downloads")
+    flows_dir = os.path.join(downloads_dir, "flows")
+    if not os.path.exists(flows_dir):
+        os.makedirs(flows_dir)
     download_flows()
+
+'''
+if __name__ == "__main__":
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    downloads_dir = os.path.join(current_dir, "downloads")
+    flows_dir = os.path.join(downloads_dir, "flows")
+    if not os.path.exists(flows_dir):
+        os.makedirs(flows_dir)
+    download_flows()'''
