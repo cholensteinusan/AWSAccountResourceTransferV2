@@ -1,13 +1,22 @@
 from flask import Flask, render_template, request, jsonify
 from waitress import serve
 import app_settings as app_settings
-from api.Export_Flows import main, download_flows
+from api.export.Export_Flows import download_flows
+import subprocess
+import os
 app = Flask(__name__)
 
 @app.route('/')
 @app.route('/index')
 @app.route('/home')
 def index():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    print(current_dir)
+    downloads_dir = os.path.join(current_dir, "downloads")
+    print(downloads_dir)
+    # Create the 'downloads' directory if it doesn't exist
+    if not os.path.exists(downloads_dir):
+        os.makedirs(downloads_dir)
     return render_template("index.html")
 
 @app.route('/test')
@@ -37,13 +46,27 @@ def index_response():
 def api_endpoint():
     response_data = ''
     try:
-        response_data =  main()
+        response_data =  download_flows()
         print(response_data)
         return jsonify({'message': 'API call successful', 'data': 'good'})
     except:
         print(response_data)
         print(jsonify({'message': 'API call failed', 'error': str('error')}), 500)
         return render_template("index.html")
+
+'''@app.route('/download_flows', methods=['POST'])
+def download_flows():
+    subprocess.run(['python', 'api/export/Export_Flows.py'])
+    return jsonify({'status': 'executed'})'''
+
+@app.route('/download_flows', methods=['POST'])
+def download_flows_route():
+    response = download_flows()
+    if response:
+        return jsonify({'status': 'executed', 'data': response})
+    else:
+        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
