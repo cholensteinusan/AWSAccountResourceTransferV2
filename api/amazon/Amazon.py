@@ -1,7 +1,6 @@
 
 
 
-
 def list_contact_flows(client, InstanceId, ContactFlowTypes, NextToken, MaxResults):
     response = client.list_contact_flows(InstanceId = InstanceId, ContactFlowTypes = ContactFlowTypes, NextToken = NextToken, MaxResults = MaxResults)
     return response
