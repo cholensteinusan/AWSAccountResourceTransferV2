@@ -5,6 +5,6 @@ def list_contact_flows(client, InstanceId, ContactFlowTypes, NextToken, MaxResul
     response = client.list_contact_flows(InstanceId = InstanceId, ContactFlowTypes = ContactFlowTypes, NextToken = NextToken, MaxResults = MaxResults)
     return response
 
-def describe_contact(client, InstanceId, ContactId):
-    response = client.describe_contact(InstanceId = InstanceId, ContactId = ContactId)
+def describe_contact_flow(client, InstanceId, ContactFlowId):
+    response = client.describe_contact_flow(InstanceId = InstanceId, ContactFlowId = ContactFlowId)
     return response

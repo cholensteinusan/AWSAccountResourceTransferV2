@@ -6,7 +6,7 @@ import app_settings as Settings
 import json
 import boto3
 import time
-from api.amazon.Amazon import list_contact_flows, describe_contact
+from api.amazon.Amazon import list_contact_flows, describe_contact_flow
 
 
 def create_client():
@@ -29,7 +29,7 @@ def download_flows():
                 'AGENT_HOLD', 'AGENT_WHISPER', 'OUTBOUND_WHISPER', 'AGENT_TRANSFER', 'QUEUE_TRANSFER'
             ]
         response = list_contact_flows(source_client, source_instance_id, ContactFlowTypes, '', 1000)
-
+        
     except Exception as e:
         print(f'Exception occurred: {e}')
         return None
@@ -48,10 +48,10 @@ def save_flows(source_client, source_instance_id, response):
         if flow['ContactFlowState'] == 'ACTIVE':
             try:
                 print(flow['Id'])
-                descResponse = describe_contact(
+                descResponse = describe_contact_flow(
                     client=source_client,
                     InstanceId=source_instance_id,
-                    ContactId=flow['Id']
+                    ContactFlowId=flow['Id']
                 )
 
                 file_path = os.path.join(flows_dir, f"{flow['Name']}.json")
