@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from waitress import serve
 import app_settings as app_settings
 from api.export.Export_Flows import main
+from api.export.Export_Modules import main
 import subprocess
 import os
 app = Flask(__name__)
@@ -59,6 +60,13 @@ def download_flows():
 
 @app.route('/download_flows', methods=['POST'])
 def download_flows_route():
+    response = main()
+    if response:
+        return jsonify({'status': 'executed', 'data': response})
+    else:
+        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+@app.route('/download_modules', methods=['POST'])
+def download_modules_route():
     response = main()
     if response:
         return jsonify({'status': 'executed', 'data': response})
