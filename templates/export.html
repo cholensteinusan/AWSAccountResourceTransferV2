@@ -54,6 +54,7 @@
             const selectedItems = [];
             const flowsCheckbox = document.getElementById('flows');
             const modulesCheckbox = document.getElementById('modules');
+            const lexBotsCheckbox = document.getElementById('lexBots');
 
             if (flowsCheckbox.checked) {
                 selectedItems.push('Flows');
@@ -71,8 +72,15 @@
                     .then(data => console.log(data.status))
                     .catch(error => console.error('Error:', error));
             }
+            if (lexBotsCheckbox.checked) {
+                selectedItems.push('LexBots');
+                // Make an AJAX request to run the Python file
+                fetch('/download_bots', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data.status))
+                    .catch(error => console.error('Error:', error));
+            }
            // if (document.getElementById('modules').checked) selectedItems.push('Modules');
-            if (document.getElementById('lexBots').checked) selectedItems.push('Lex bots');
             if (document.getElementById('queues').checked) selectedItems.push('Queues');
             if (document.getElementById('hours').checked) selectedItems.push('Hours');
             if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
