@@ -18,17 +18,38 @@ def describe_contact_flow_module(client, InstanceId, ContactFlowModuleId):
     response = client.describe_contact_flow_module(InstanceId = InstanceId, ContactFlowModuleId = ContactFlowModuleId)
     return response
 
-def list_bots(client, InstanceId, NextToken, MaxResults, LexVersion):
+'''def list_bots(client, InstanceId, NextToken, MaxResults, LexVersion):
     response = client.list_bots(InstanceId = InstanceId, NextToken = NextToken, MaxResults = MaxResults, LexVersion = LexVersion)
-    return response
+    return response'''
 
 #lex
+
+def list_bots(client, sortBy, filters, maxResults, nextToken):
+    response = client.list_bots(sortBy = sortBy, filters = filters, maxResults = maxResults, nextToken = nextToken)
+    return response
+
+def list_bots(client, sortBy, filters, maxResults):
+    response = client.list_bots(sortBy = sortBy, filters = filters, maxResults = maxResults)
+    return response
+
+def list_bots(client, maxResults):
+    response = client.list_bots(maxResults = maxResults)
+    return response
+
 def list_bot_versions(client, botId, sortBy, maxResults, nextToken):
     response = client.list_bot_versions(botId = botId, sortBy = sortBy, maxResults = maxResults, nextToken = nextToken)
     return response
 
+def list_bot_versions(client, botId, sortBy, maxResults):
+    response = client.list_bot_versions(botId = botId, sortBy = sortBy, maxResults = maxResults)
+    return response
+
 def create_export(client, resourceSpecification, fileFormat, filePassword):
     response = client.create_export(resourceSpecification = resourceSpecification, fileFormat = fileFormat, filePassword = filePassword)
+    return response
+
+def create_export(client, resourceSpecification, fileFormat):
+    response = client.create_export(resourceSpecification = resourceSpecification, fileFormat = fileFormat)
     return response
 
 def describe_export(client, exportId):

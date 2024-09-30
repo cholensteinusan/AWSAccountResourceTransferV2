@@ -24,20 +24,19 @@ def download_bots():
     source_client, source_instance_id = create_client()
     try:
         v2botList = []
-        lexResponse =  list_bots(source_client, source_instance_id, '', 25, 'V2')
+        lexResponse = list_bots(source_client, 100)
         v2botList.extend(lexResponse["botSummaries"])
-        
         while "nextToken" in lexResponse:
             print("Getting more lex bots from Lex")
-            lexResponse = list_bots(source_client, source_instance_id, lexResponse["nextToken"], 25, 'V2')
             v2botList.extend(lexResponse["botSummaries"])
-        sortBy={
-                    'attribute': 'BotVersion',
-                    'order': 'Descending'
-                }
+        
         for bot in v2botList:
             # First, we have to get the versions for the current bot
-            response = list_bot_versions(source_client, bot["botId"], sortBy, 5, '')
+            sortBy={
+             'attribute': 'BotVersion',
+             'order': 'Descending'
+            }
+            response = list_bot_versions(source_client, bot["botId"], sortBy, 5)
             latestVersion = response["botVersionSummaries"][1]["botVersion"]
             resourceSpecification={
                     'botExportSpecification': {
@@ -47,7 +46,7 @@ def download_bots():
                 }
             fileFormat='LexJson'
             # Now we can start an export of it
-            response = create_export(source_client, resourceSpecification, fileFormat, '')
+            response = create_export(source_client, resourceSpecification, fileFormat)
             exportId = response["exportId"]
 
             # Now we get to wait around until it decides to finish
