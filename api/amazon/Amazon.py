@@ -22,6 +22,13 @@ def describe_contact_flow_module(client, InstanceId, ContactFlowModuleId):
     response = client.list_bots(InstanceId = InstanceId, NextToken = NextToken, MaxResults = MaxResults, LexVersion = LexVersion)
     return response'''
 
+def list_queues(client, InstanceId, QueueTypes, NextToken, MaxResults):
+    response = client.list_queues(InstanceId = InstanceId, QueueTypes = QueueTypes, NextToken = NextToken, MaxResults = MaxResults)
+    return response
+
+def list_queues(client, InstanceId, QueueTypes, MaxResults):
+    response = client.list_queues(InstanceId = InstanceId, QueueTypes = QueueTypes, MaxResults = MaxResults)
+    return response
 #lex
 
 def list_bots(client, sortBy, filters, maxResults, nextToken):

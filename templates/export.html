@@ -55,6 +55,7 @@
             const flowsCheckbox = document.getElementById('flows');
             const modulesCheckbox = document.getElementById('modules');
             const lexBotsCheckbox = document.getElementById('lexBots');
+            const queuesCheckBox = document.getElementById('queues');
 
             if (flowsCheckbox.checked) {
                 selectedItems.push('Flows');
@@ -80,8 +81,14 @@
                     .then(data => console.log(data.status))
                     .catch(error => console.error('Error:', error));
             }
-           // if (document.getElementById('modules').checked) selectedItems.push('Modules');
-            if (document.getElementById('queues').checked) selectedItems.push('Queues');
+            if (queuesCheckBox.checked) {
+                selectedItems.push('Queues');
+                // Make an AJAX request to run the Python file
+                fetch('/download_queues', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data.status))
+                    .catch(error => console.error('Error:', error));
+            }
             if (document.getElementById('hours').checked) selectedItems.push('Hours');
             if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
             if (document.getElementById('lambdas').checked) selectedItems.push('Lambdas');

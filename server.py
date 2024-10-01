@@ -4,6 +4,7 @@ import app_settings as app_settings
 from api.export.Export_Flows import main
 from api.export.Export_Modules import main
 from api.export.Export_Bots import download_bots
+from api.export.Export_Queues import download_queues
 import subprocess
 import os
 app = Flask(__name__)
@@ -80,7 +81,13 @@ def download_bots_route():
         return jsonify({'status': 'executed', 'data': response})
     else:
         return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
-
+@app.route('/download_queues', methods=['POST'])
+def download_queues_route():
+    response = download_queues()
+    if response:
+        return jsonify({'status': 'executed', 'data': response})
+    else:
+        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
