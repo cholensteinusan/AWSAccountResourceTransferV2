@@ -28,6 +28,15 @@
         .button:disabled {
             background-color: #ccc;
         }
+        .response-box {
+            width: 100%;
+            height: 150px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
     </style>
 </head>
 
@@ -47,6 +56,7 @@
             <button type="button" id="downloadButton" class="button" onclick="startDownload()">Download</button>
         </form>
         <p id="status"></p>
+        <textarea id="responseBox" class="response-box" readonly></textarea>
     </div>
 
     <script>
@@ -56,38 +66,68 @@
             const modulesCheckbox = document.getElementById('modules');
             const lexBotsCheckbox = document.getElementById('lexBots');
             const queuesCheckBox = document.getElementById('queues');
+            const responseBox = document.getElementById('responseBox');
+
+            responseBox.value = ''; // Clear the response box
 
             if (flowsCheckbox.checked) {
                 selectedItems.push('Flows');
                 // Make an AJAX request to run the Python file
                 fetch('/download_flows', { method: 'POST' })
                     .then(response => response.json())
-                    .then(data => console.log(data.status))
-                    .catch(error => console.error('Error:', error));
+                    .then(data => {
+                        console.log(data.status);
+                        responseBox.value += 'Flows: ' + data.status + '\n';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        responseBox.value += 'Flows: Error\n';
+                    });
             }
             if (modulesCheckbox.checked) {
                 selectedItems.push('Modules');
                 // Make an AJAX request to run the Python file
                 fetch('/download_modules', { method: 'POST' })
                     .then(response => response.json())
-                    .then(data => console.log(data.status))
-                    .catch(error => console.error('Error:', error));
+                    .then(data => {
+                        console.log(data.status);
+                        responseBox.value += 'Modules: ' + data.status + '\n';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        responseBox.value += 'Modules: Error\n';
+                    });
             }
             if (lexBotsCheckbox.checked) {
                 selectedItems.push('LexBots');
                 // Make an AJAX request to run the Python file
                 fetch('/download_bots', { method: 'POST' })
                     .then(response => response.json())
-                    .then(data => console.log(data.status))
-                    .catch(error => console.error('Error:', error));
+                    .then(data => {
+                        console.log(data.status);
+                        responseBox.value += 'LexBots: ' + data.status + '\n';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        responseBox.value += 'LexBots: Error\n';
+                    });
             }
             if (queuesCheckBox.checked) {
                 selectedItems.push('Queues');
                 // Make an AJAX request to run the Python file
                 fetch('/download_queues', { method: 'POST' })
                     .then(response => response.json())
-                    .then(data => console.log(data.status))
-                    .catch(error => console.error('Error:', error));
+                    .then(data => {
+                        console.log('data: ' + JSON.stringify(data));
+                        responseBox.value += 'Queues: ' + data.status + ' ' + data.statusCode;
+                        if (data.exception) {
+                            responseBox.value += ' ' + data.exception;
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error: ' + JSON.stringify(error));
+                        responseBox.value += 'Queues: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                    });
             }
             if (document.getElementById('hours').checked) selectedItems.push('Hours');
             if (document.getElementById('prompts').checked) selectedItems.push('Prompts');

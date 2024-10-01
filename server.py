@@ -84,10 +84,12 @@ def download_bots_route():
 @app.route('/download_queues', methods=['POST'])
 def download_queues_route():
     response = download_queues()
-    if response:
-        return jsonify({'status': 'executed', 'data': response})
+    print('resp: ', response)
+    if response['statusResponse'] == 'GOOD':
+        return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
-        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+        return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
+        #return jsonify({'status': 'failed', 'message': 'An error occurred during the download process', 'error_code': response['statusCode']})
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)

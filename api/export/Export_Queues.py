@@ -6,7 +6,6 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import app_settings as Settings
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-import serverLog as logging
 from api.amazon.Amazon import list_queues
 
 def create_client():
@@ -24,17 +23,17 @@ def create_client():
 def download_queues():
     source_client, source_instance_id = create_client()
     returnStatus = {
-         'statusCode':'200',
+         'statusCode': '200',
          'statusResponse': 'GOOD'
     }
     try:
         QueueTypes = ['STANDARD', 'AGENT']
         MaxResults = 1000
         response = list_queues(source_client, source_instance_id, QueueTypes, MaxResults)
-        if (response['ResponseMetadata']['HTTPStatusCode'] != '200'):
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
             returnStatus['statusCode'] = response['ResponseMetadata']['HTTPStatusCode']
+            returnStatus['statusResponse'] = 'FAILED'
             return returnStatus
-        logging.loggingDictionary["list_queues_Export_Queues"] = response
         queues = response['QueueSummaryList']
         parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         downloads_folder_path = os.path.join(parent_directory, 'downloads')
@@ -48,8 +47,12 @@ def download_queues():
 
             for queue in queues:
                 queue_id = queue.get('Id')
-                queue_name = queue.get('Name', 'Agent')  # Provide a default value 'N/A' if 'Name' is missing
+                queue_name = queue.get('Name', 'Agent')  # Provide a default value 'Agent' if 'Name' is missing
                 queue_arn = queue.get('Arn')
                 writer.writerow([queue_id, queue_name, queue_arn])
     except Exception as e:
         print(f"An error occurred: {e}")
+        returnStatus['statusCode'] = '500'
+        returnStatus['statusResponse'] = 'FAILED'
+        returnStatus['exception'] = str({e})
+    return returnStatus

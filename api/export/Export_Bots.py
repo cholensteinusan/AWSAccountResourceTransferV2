@@ -7,7 +7,6 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import app_settings as Settings
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-import serverLog as logging
 from api.amazon.Amazon import list_bots, list_bot_versions, create_export, describe_export
 
 def create_client():
@@ -40,7 +39,6 @@ def download_bots():
              'order': 'Descending'
             }
             response = list_bot_versions(source_client, bot["botId"], sortBy, 5)
-            logging.loggingDictionary["list_bot_versions_Export_Bots for ", bot["botId"]] = response
                 # Check if there are any versions available
 
             if len(response["botVersionSummaries"]) <= 1:
@@ -54,8 +52,6 @@ def download_bots():
                     'botVersion': latestVersion
                 }
             }
-            logging.loggingDictionary["latestversion for ", bot["botId"]] = latestVersion
-            print(logging.loggingDictionary)
             fileFormat='LexJson'
             # Now we can start an export of it
             response = create_export(source_client, resourceSpecification, fileFormat)
