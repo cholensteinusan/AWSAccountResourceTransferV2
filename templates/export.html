@@ -70,64 +70,83 @@
 
             responseBox.value = ''; // Clear the response box
 
+            const fetchPromises = [];
+
             if (flowsCheckbox.checked) {
                 selectedItems.push('Flows');
                 // Make an AJAX request to run the Python file
-                fetch('/download_flows', { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.status);
-                        responseBox.value += 'Flows: ' + data.status + '\n';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        responseBox.value += 'Flows: Error\n';
-                    });
+                fetchPromises.push(
+                    fetch('/download_flows', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.status);
+                            responseBox.value += '\nFlows: ' + data.status + ' ' + data.statusCode;
+                            if (data.exception) {
+                                responseBox.value += ' ' + data.exception;
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error: ' + JSON.stringify(error));
+                            responseBox.value += '\nFlows: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                        })
+                );
             }
             if (modulesCheckbox.checked) {
                 selectedItems.push('Modules');
                 // Make an AJAX request to run the Python file
-                fetch('/download_modules', { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.status);
-                        responseBox.value += 'Modules: ' + data.status + '\n';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        responseBox.value += 'Modules: Error\n';
-                    });
+                fetchPromises.push(
+                    fetch('/download_modules', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('data: ' + JSON.stringify(data));
+                            responseBox.value += '\nModules: ' + data.status + ' ' + data.statusCode;
+                            if (data.exception) {
+                                responseBox.value += ' ' + data.exception;
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error: ' + JSON.stringify(error));
+                            responseBox.value += '\nModules: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                        })
+                );
             }
             if (lexBotsCheckbox.checked) {
                 selectedItems.push('LexBots');
                 // Make an AJAX request to run the Python file
-                fetch('/download_bots', { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.status);
-                        responseBox.value += 'LexBots: ' + data.status + '\n';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        responseBox.value += 'LexBots: Error\n';
-                    });
+                fetchPromises.push(
+                    fetch('/download_bots', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('data: ' + JSON.stringify(data));
+                            responseBox.value += '\nLexBots: ' + data.status + ' ' + data.statusCode;
+                            if (data.exception) {
+                                responseBox.value += ' ' + data.exception;
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error: ' + JSON.stringify(error));
+                            responseBox.value += '\nLexBots: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                        })
+                );
             }
             if (queuesCheckBox.checked) {
                 selectedItems.push('Queues');
                 // Make an AJAX request to run the Python file
-                fetch('/download_queues', { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('data: ' + JSON.stringify(data));
-                        responseBox.value += 'Queues: ' + data.status + ' ' + data.statusCode;
-                        if (data.exception) {
-                            responseBox.value += ' ' + data.exception;
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Error: ' + JSON.stringify(error));
-                        responseBox.value += 'Queues: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
-                    });
+                fetchPromises.push(
+                    fetch('/download_queues', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('data: ' + JSON.stringify(data));
+                            responseBox.value += '\nQueues: ' + data.status + ' ' + data.statusCode;
+                            if (data.exception) {
+                                responseBox.value += ' ' + data.exception;
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error: ' + JSON.stringify(error));
+                            responseBox.value += '\nQueues: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                        })
+                );
             }
             if (document.getElementById('hours').checked) selectedItems.push('Hours');
             if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
@@ -137,11 +156,11 @@
             downloadButton.disabled = true;
             downloadButton.textContent = 'Downloading...';
 
-            setTimeout(() => {
+            Promise.all(fetchPromises).then(() => {
                 downloadButton.disabled = false;
                 downloadButton.textContent = 'Download';
                 document.getElementById('status').textContent = 'Selected items: ' + selectedItems.join(', ');
-            }, 2000); // Simulate download delay
+            });
         }
     </script>
 </body>

@@ -1,13 +1,18 @@
 from flask import Flask, render_template, request, jsonify
 from waitress import serve
 import app_settings as app_settings
-from api.export.Export_Flows import main
-from api.export.Export_Modules import main
+from api.export.Export_Flows import download_flows
+from api.export.Export_Modules import download_modules
 from api.export.Export_Bots import download_bots
 from api.export.Export_Queues import download_queues
 import subprocess
 import os
 app = Flask(__name__)
+
+@app.route('/test')
+def test():
+    print('ffds')
+    return render_template("test.html")
 
 @app.route('/')
 @app.route('/index')
@@ -20,10 +25,6 @@ def index():
         os.makedirs(downloads_dir)
     return render_template("index.html")
 
-@app.route('/test')
-def test():
-    print('ffds')
-    return render_template("test.html")
 
 @app.route('/index_response', methods=['POST'])
 def index_response():
@@ -42,45 +43,29 @@ def index_response():
         return render_template("export.html", settings=settings)
     else:
         return render_template("error.html")
-    
-'''@app.route('/api/export', methods=['POST'])
-def api_endpoint():
-    response_data = ''
-    try:
-        response_data =  main()
-        print(response_data)
-        return jsonify({'message': 'API call successful', 'data': 'good'})
-    except:
-        print(response_data)
-        print(jsonify({'message': 'API call failed', 'error': str('error')}), 500)
-        return render_template("index.html")'''
-
-'''@app.route('/download_flows', methods=['POST'])
-def download_flows():
-    subprocess.run(['python', 'api/export/Export_Flows.py'])
-    return jsonify({'status': 'executed'})'''
 
 @app.route('/download_flows', methods=['POST'])
 def download_flows_route():
-    response = main()
-    if response:
-        return jsonify({'status': 'executed', 'data': response})
+    response = download_flows()
+    if response['statusResponse'] == 'GOOD':
+         return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
-        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+        return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
 @app.route('/download_modules', methods=['POST'])
 def download_modules_route():
-    response = main()
-    if response:
-        return jsonify({'status': 'executed', 'data': response})
+    response = download_modules()
+    if response['statusResponse'] == 'GOOD':
+         return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
-        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+        return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
 @app.route('/download_bots', methods=['POST'])
 def download_bots_route():
     response = download_bots()
-    if response:
-        return jsonify({'status': 'executed', 'data': response})
+    print('resp: ', response)
+    if response['statusResponse'] == 'GOOD':
+        return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
-        return jsonify({'status': 'failed', 'message': 'An error occurred during the download process'})
+        return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
 @app.route('/download_queues', methods=['POST'])
 def download_queues_route():
     response = download_queues()

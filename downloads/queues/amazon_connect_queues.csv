@@ -1,5 +1,4 @@
 QueueId,Name,QueueArn
-4ceaeb6c-09ad-4bc1-b070-8a820b4350e5,Agent,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/agent/4ceaeb6c-09ad-4bc1-b070-8a820b4350e5
 0488b53b-d005-4658-aa89-e6e91e550079,ssssssssss,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/0488b53b-d005-4658-aa89-e6e91e550079
 087eb716-48e8-4290-9124-457457965385,sdfdsafsa,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/087eb716-48e8-4290-9124-457457965385
 0c1fb402-52e1-44ea-8531-897498aab6e3,Customer Service Outbound,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/0c1fb402-52e1-44ea-8531-897498aab6e3
@@ -12,6 +11,7 @@ QueueId,Name,QueueArn
 36e44c2b-9c32-4cd7-a902-c21f0ef1bdb4,213122222,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/36e44c2b-9c32-4cd7-a902-c21f0ef1bdb4
 3fbf121f-a8ae-4ea2-9f85-b3e2c0ac1689,Dom_Eng_CS_Residential,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/3fbf121f-a8ae-4ea2-9f85-b3e2c0ac1689
 46d6b573-15e1-4884-8f57-989331861d56,fbdfbsfd,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/46d6b573-15e1-4884-8f57-989331861d56
+4ceaeb6c-09ad-4bc1-b070-8a820b4350e5,Agent,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/agent/4ceaeb6c-09ad-4bc1-b070-8a820b4350e5
 52d03ab6-0fd9-41cc-86c0-49dada19c365,CommercialTransfer,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/52d03ab6-0fd9-41cc-86c0-49dada19c365
 537fffb8-892f-41e5-a1df-dac4b2158c69,22222222222222,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/537fffb8-892f-41e5-a1df-dac4b2158c69
 596d62dd-4158-4ebe-9ab1-3fe2e42aabfe,GenAI_Alex,arn:aws:connect:us-east-1:947529155395:instance/c77b5ada-3f83-42b6-8b26-0513cfdaf264/queue/596d62dd-4158-4ebe-9ab1-3fe2e42aabfe

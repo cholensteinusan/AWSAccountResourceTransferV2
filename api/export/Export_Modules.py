@@ -9,6 +9,11 @@ import time
 from api.amazon.Amazon import list_contact_flow_modules, describe_contact_flow_module
 
 
+returnStatus = {
+         'statusCode': '200',
+         'statusResponse': 'GOOD'
+}
+
 def create_client():
     source_instance_id = Settings.settings['SOURCE_INSTANCE_ID']
     source_client = boto3.client(
@@ -25,13 +30,17 @@ def download_modules():
     source_client, source_instance_id = create_client()
     try:
         response = list_contact_flow_modules(source_client, source_instance_id, 'ACTIVE', '', 1000)
-        
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            returnStatus['statusCode'] = response['ResponseMetadata']['HTTPStatusCode']
+            returnStatus['statusResponse'] = 'FAILED'
+            return returnStatus
     except Exception as e:
-        print(f'Exception occurred: {e}')
-        return None
-    print('downloaded modules resp: ', response)
+        returnStatus['statusCode'] = '500'
+        returnStatus['statusResponse'] = 'FAILED'
+        returnStatus['exception'] = str({e})
+        return returnStatus
     save_modules(source_client, source_instance_id, response)
-    return response
+    return returnStatus
 
 def save_modules(source_client, source_instance_id, response):
     parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -53,11 +62,11 @@ def save_modules(source_client, source_instance_id, response):
                     f.write(json.dumps(descResponse))
                 time.sleep(0.15)
             except Exception as e:
-                print("Exception: ", e)
+                returnStatus['statusCode'] = '500'
+                returnStatus['statusResponse'] = 'FAILED'
+                returnStatus['exception'] = str({e})
+    return returnStatus
 
-def main():
-    response = download_modules()
-    return response
 
 '''
 if __name__ == "__main__":

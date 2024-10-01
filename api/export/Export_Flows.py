@@ -2,12 +2,16 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import app_settings as Settings
-
 import json
 import boto3
 import time
 from api.amazon.Amazon import list_contact_flows, describe_contact_flow
 
+
+returnStatus = {
+         'statusCode': '200',
+         'statusResponse': 'GOOD'
+}
 
 def create_client():
     source_instance_id = Settings.settings['SOURCE_INSTANCE_ID']
@@ -29,16 +33,19 @@ def download_flows():
                 'AGENT_HOLD', 'AGENT_WHISPER', 'OUTBOUND_WHISPER', 'AGENT_TRANSFER', 'QUEUE_TRANSFER'
             ]
         response = list_contact_flows(source_client, source_instance_id, ContactFlowTypes, '', 1000)
-        
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            returnStatus['statusCode'] = response['ResponseMetadata']['HTTPStatusCode']
+            returnStatus['statusResponse'] = 'FAILED'
+            return returnStatus
     except Exception as e:
-        print(f'Exception occurred: {e}')
-        return None
-    print('downloaded flows resp: ', response)
+        returnStatus['statusCode'] = '500'
+        returnStatus['statusResponse'] = 'FAILED'
+        returnStatus['exception'] = str({e})
+        return returnStatus
     save_flows(source_client, source_instance_id, response)
-    return response
+    return returnStatus
 
 def save_flows(source_client, source_instance_id, response):
-
     parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     downloads_folder_path = os.path.join(parent_directory, 'downloads')
     flows_dir = os.path.join(downloads_folder_path, 'flows')
@@ -47,7 +54,6 @@ def save_flows(source_client, source_instance_id, response):
     for flow in response['ContactFlowSummaryList']:
         if flow['ContactFlowState'] == 'ACTIVE':
             try:
-                print(flow['Id'])
                 descResponse = describe_contact_flow(
                     client=source_client,
                     InstanceId=source_instance_id,
@@ -60,10 +66,11 @@ def save_flows(source_client, source_instance_id, response):
                 time.sleep(0.15)
             except Exception as e:
                 print("Exception: ", e)
+                returnStatus['statusCode'] = '500'
+                returnStatus['statusResponse'] = 'FAILED'
+                returnStatus['exception'] = str({e})
+    return returnStatus
 
-def main():
-    response = download_flows()
-    return response
 
 '''
 if __name__ == "__main__":
