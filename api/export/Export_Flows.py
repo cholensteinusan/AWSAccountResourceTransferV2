@@ -25,7 +25,6 @@ def create_client():
     return source_client, source_instance_id
 
 def download_flows():
-    print('downloading flows')
     source_client, source_instance_id = create_client()
     try:
         ContactFlowTypes=[
@@ -46,9 +45,9 @@ def download_flows():
     return returnStatus
 
 def save_flows(source_client, source_instance_id, response):
-    parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    downloads_folder_path = os.path.join(parent_directory, 'downloads')
-    flows_dir = os.path.join(downloads_folder_path, 'flows')
+   # parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+   # downloads_folder_path = os.path.join(parent_directory, 'downloads')
+    flows_dir = os.path.join(Settings.settings['DOWNLOADS_PATH'], 'flows')
     if not os.path.exists(flows_dir):
         os.makedirs(flows_dir)
     for flow in response['ContactFlowSummaryList']:

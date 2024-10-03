@@ -26,7 +26,6 @@ def create_client():
     return source_client, source_instance_id
 
 def download_modules():
-    print('downloading modules')
     source_client, source_instance_id = create_client()
     try:
         response = list_contact_flow_modules(source_client, source_instance_id, 'ACTIVE', '', 1000)
@@ -43,14 +42,11 @@ def download_modules():
     return returnStatus
 
 def save_modules(source_client, source_instance_id, response):
-    parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    downloads_folder_path = os.path.join(parent_directory, 'downloads')
-    modules_dir = os.path.join(downloads_folder_path, 'modules')
+    modules_dir = os.path.join(Settings.settings['DOWNLOADS_PATH'], 'modules')
     if not os.path.exists(modules_dir):
         os.makedirs(modules_dir)
     for flow in response['ContactFlowModulesSummaryList']:
             try:
-                print(flow['Id'])
                 descResponse = describe_contact_flow_module(
                     client=source_client,
                     InstanceId=source_instance_id,
@@ -67,12 +63,3 @@ def save_modules(source_client, source_instance_id, response):
                 returnStatus['exception'] = str({e})
     return returnStatus
 
-
-'''
-if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    downloads_dir = os.path.join(current_dir, "downloads")
-    flows_dir = os.path.join(downloads_dir, "flows")
-    if not os.path.exists(flows_dir):
-        os.makedirs(flows_dir)
-    download_flows()'''

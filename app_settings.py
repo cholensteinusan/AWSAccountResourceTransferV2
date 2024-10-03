@@ -1,8 +1,10 @@
 # app_settings.py
-
+import os
+from pathlib import Path
 APPLICATION_NAME = 'AWS Account Utilities'
 
 settings = {
+    'DOWNLOADS_PATH': Path.home() / "Downloads",
     'SOURCE_ACCESS_KEY': '',
     'SOURCE_SECRET_KEY': '',
     'SOURCE_SESSION_TOKEN': '',

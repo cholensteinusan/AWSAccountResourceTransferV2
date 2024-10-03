@@ -32,7 +32,6 @@ def download_bots():
     try:
         v2botList = []
         lexResponse = list_bots(source_client, 100)
-        print(lexResponse)
         if lexResponse['ResponseMetadata']['HTTPStatusCode'] != 200:
             returnStatus['statusCode'] = lexResponse['ResponseMetadata']['HTTPStatusCode']
             returnStatus['statusResponse'] = 'FAILED'
@@ -84,12 +83,9 @@ def download_bots():
                 continue
 
             # With a successful export, now we have to download it via the signedUrl
-            print("Downloading signedURL for " + bot["botName"])
             downloadUrl = response["downloadUrl"]
             response = requests.get(downloadUrl, stream=True)
-            parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            downloads_folder_path = os.path.join(parent_directory, 'downloads')
-            lex_dir = os.path.join(downloads_folder_path, 'lex')
+            lex_dir = os.path.join(Settings.settings['DOWNLOADS_PATH'], 'lex')
             if not os.path.exists(lex_dir):
                 os.makedirs(lex_dir)
             with open(os.path.join(lex_dir, bot["botName"] + ".zip"), 'wb') as fd:

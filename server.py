@@ -5,24 +5,20 @@ from api.export.Export_Flows import download_flows
 from api.export.Export_Modules import download_modules
 from api.export.Export_Bots import download_bots
 from api.export.Export_Queues import download_queues
+from api.export.Export_HoursOfOperation import download_hoop
 import subprocess
 import os
+from pathlib import Path
 app = Flask(__name__)
 
 @app.route('/test')
 def test():
-    print('ffds')
     return render_template("test.html")
 
 @app.route('/')
 @app.route('/index')
 @app.route('/home')
 def index():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    downloads_dir = os.path.join(current_dir, "downloads")
-    # Create the 'downloads' directory if it doesn't exist
-    if not os.path.exists(downloads_dir):
-        os.makedirs(downloads_dir)
     return render_template("index.html")
 
 
@@ -61,7 +57,6 @@ def download_modules_route():
 @app.route('/download_bots', methods=['POST'])
 def download_bots_route():
     response = download_bots()
-    print('resp: ', response)
     if response['statusResponse'] == 'GOOD':
         return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
@@ -69,12 +64,17 @@ def download_bots_route():
 @app.route('/download_queues', methods=['POST'])
 def download_queues_route():
     response = download_queues()
-    print('resp: ', response)
     if response['statusResponse'] == 'GOOD':
         return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
     else:
         return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
         #return jsonify({'status': 'failed', 'message': 'An error occurred during the download process', 'error_code': response['statusCode']})
-
+@app.route('/download_hoop', methods=['POST'])
+def download_hoop_route():
+    response = download_hoop()
+    if response['statusResponse'] == 'GOOD':
+        return jsonify({'status': 'executed', 'statusCode': response['statusCode'], 'data': response})
+    else:
+        return jsonify({'status': 'failed', 'statusCode': response['statusCode'], 'exception':response['exception']})
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)

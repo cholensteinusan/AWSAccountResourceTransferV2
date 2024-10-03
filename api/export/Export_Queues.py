@@ -35,9 +35,7 @@ def download_queues():
             returnStatus['statusResponse'] = 'FAILED'
             return returnStatus
         queues = response['QueueSummaryList']
-        parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        downloads_folder_path = os.path.join(parent_directory, 'downloads')
-        queues_dir = os.path.join(downloads_folder_path, 'queues')
+        queues_dir = os.path.join(Settings.settings['DOWNLOADS_PATH'], 'queues')
         if not os.path.exists(queues_dir):
                 os.makedirs(queues_dir)
         csv_file = os.path.join(queues_dir, 'amazon_connect_queues.csv')

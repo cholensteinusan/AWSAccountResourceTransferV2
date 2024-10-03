@@ -29,8 +29,20 @@ def list_queues(client, InstanceId, QueueTypes, NextToken, MaxResults):
 def list_queues(client, InstanceId, QueueTypes, MaxResults):
     response = client.list_queues(InstanceId = InstanceId, QueueTypes = QueueTypes, MaxResults = MaxResults)
     return response
-#lex
 
+def list_hours_of_operations(client, InstanceId, NextToken, MaxResults):
+    response = client.list_hours_of_operations(InstanceId = InstanceId, NextToken = NextToken, MaxResults = MaxResults)
+    return response
+
+def list_hours_of_operations(client, InstanceId, MaxResults):
+    response = client.list_hours_of_operations(InstanceId = InstanceId, MaxResults = MaxResults)
+    return response
+
+def describe_hours_of_operation(client, InstanceId, HoursOfOperationId):
+    response = client.describe_hours_of_operation(InstanceId = InstanceId, HoursOfOperationId = HoursOfOperationId)
+    return response
+
+#lex
 def list_bots(client, sortBy, filters, maxResults, nextToken):
     response = client.list_bots(sortBy = sortBy, filters = filters, maxResults = maxResults, nextToken = nextToken)
     return response

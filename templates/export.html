@@ -51,8 +51,7 @@
             <label><input type="checkbox" id="lexBots"> Lex bots</label><br>
             <label><input type="checkbox" id="queues"> Queues</label><br>
             <label><input type="checkbox" id="hours"> Hours</label><br>
-            <label><input type="checkbox" id="prompts"> Prompts</label><br>
-            <label><input type="checkbox" id="lambdas"> Lambdas</label><br><br>
+
             <button type="button" id="downloadButton" class="button" onclick="startDownload()">Download</button>
         </form>
         <p id="status"></p>
@@ -66,6 +65,7 @@
             const modulesCheckbox = document.getElementById('modules');
             const lexBotsCheckbox = document.getElementById('lexBots');
             const queuesCheckBox = document.getElementById('queues');
+            const hoopCheckBox = document.getElementById('hours');
             const responseBox = document.getElementById('responseBox');
 
             responseBox.value = ''; // Clear the response box
@@ -148,10 +148,30 @@
                         })
                 );
             }
-            if (document.getElementById('hours').checked) selectedItems.push('Hours');
-            if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
-            if (document.getElementById('lambdas').checked) selectedItems.push('Lambdas');
-
+            if (hoopCheckBox.checked) {
+                selectedItems.push('Hours');
+                // Make an AJAX request to run the Python file
+                fetchPromises.push(
+                    fetch('/download_hoop', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('data: ' + JSON.stringify(data));
+                            responseBox.value += '\nHours: ' + data.status + ' ' + data.statusCode;
+                            if (data.exception) {
+                                responseBox.value += ' ' + data.exception;
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error: ' + JSON.stringify(error));
+                            responseBox.value += '\nHours: ' + (error.exception || 'Unknown error') + '\nMassive error.. server did not receive response';
+                        })
+                );
+            }
+           /* if (document.getElementById('prompts').checked) selectedItems.push('Prompts');
+           if (document.getElementById('lambdas').checked) selectedItems.push('Lambdas');
+                    <label><input type="checkbox" id="prompts"> Prompts</label><br>
+            <label><input type="checkbox" id="lambdas"> Lambdas</label><br><br>
+           */
             const downloadButton = document.getElementById('downloadButton');
             downloadButton.disabled = true;
             downloadButton.textContent = 'Downloading...';
